@@ -134,6 +134,11 @@ celerybeat.pid
 # SageMath parsed files
 *.sage.py
 
+# Data files - too large for GitHub
+data/CUAD_v1.json
+data/CUAD_v1/
+data/train_sft.json
+data/val_sft.json
 # Environments
 .env
 .envrc
