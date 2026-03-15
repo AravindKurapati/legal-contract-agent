@@ -1,0 +1,33 @@
+{
+  "run_id": "ap-LH1Xz1HqMRwJ7hOu4nkswm",
+  "date": "2026-03-15",
+  "model": "mistralai/Mistral-7B-Instruct-v0.3",
+  "method": "QLoRA",
+  "lora_rank": 16,
+  "lora_alpha": 32,
+  "target_modules": ["q_proj", "v_proj", "k_proj", "o_proj"],
+  "dataset": "CUAD",
+  "train_examples": 18819,
+  "val_examples": 2091,
+  "max_seq_length": 512,
+  "batch_size": 4,
+  "gradient_accumulation_steps": 4,
+  "learning_rate": 0.0002,
+  "lr_scheduler": "cosine",
+  "epochs": 1,
+  "total_steps": 1176,
+  "hardware": "Modal A10G",
+  "duration_hours": 3.75,
+  "train_loss": 0.2422,
+  "loss_curve": {
+    "step_200": 0.5937,
+    "step_600": 0.0656,
+    "step_1000": 0.0403
+  },
+  "eval_loss": {
+    "step_400": 1.7112,
+    "step_800": 2.1201
+  },
+  "model_saved": "cuad-sft-vol:/cuad-mistral-final",
+  "adapter_size_mb": 52
+}

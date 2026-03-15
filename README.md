@@ -33,7 +33,24 @@ agent/agent.py          - ContractReviewAgent (sliding window + 41 clause types)
 agent/risk_rules.py     - Deterministic risk flagging
 serve/serve.py          - Modal web endpoint
 serve/app.py            - Streamlit UI
+
 ```
+
+
+## Training Results
+- **Train loss:** 0.2422 (final)
+- **Loss curve:** 0.59 -> 0.07 -> 0.04 over 1176 steps
+- **Duration:** 3h 45min on Modal A10G
+- **Model size:** 52MB LoRA adapter on Mistral 7B base
+
+## Evaluation Results
+| Model | Macro F1 |
+|-------|----------|
+| Base Mistral 7B (no fine-tuning) | TBD |
+| Fine-tuned on CUAD (ours) | TBD |
+
+
+
 
 ## Run it yourself
 ```bash
