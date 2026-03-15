@@ -230,10 +230,14 @@ def train():
     print("Starting training...")
     trainer.train()
 
+    print("Committing checkpoints to volume...")
+    volume.commit()
+
     print("Saving final model...")
     trainer.save_model("/vol/cuad-mistral-final")
     tokenizer.save_pretrained("/vol/cuad-mistral-final")
-    print("Done. Model saved to /checkpoints/cuad-mistral-final")
+    volume.commit()
+    print("Done. Model saved to /vol/cuad-mistral-final")
 
 
 @app.local_entrypoint()
