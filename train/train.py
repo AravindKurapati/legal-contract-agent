@@ -192,7 +192,7 @@ def train():
         warmup_ratio=0.05,
         per_device_eval_batch_size=4,
         eval_strategy="steps",
-        eval_steps=200,
+        eval_steps=400,
         save_steps=200,
         save_total_limit=2,
         logging_steps=50,
