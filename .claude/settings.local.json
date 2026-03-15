@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd \"D:\\\\Aru\\\\NYU\\\\legal-contract-agent\" && modal run train/train.py 2>&1)",
+      "Bash(cd \"D:\\\\Aru\\\\NYU\\\\legal-contract-agent\" && PYTHONIOENCODING=utf-8 modal run train/train.py 2>&1)"
+    ]
+  }
+}
