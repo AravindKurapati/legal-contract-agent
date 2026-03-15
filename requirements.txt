@@ -9,3 +9,9 @@ modal
 streamlit
 scikit-learn
 pandas
+sentencepiece
+rich
+pdfplumber
+fastapi
+pydantic
+requests
