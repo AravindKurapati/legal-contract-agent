@@ -11,11 +11,6 @@ flags legal risks, and returns a structured report.
 Built on a Mistral 7B model fine-tuned 
 with QLoRA on 18,819 expert annotated contract passages.
 
-## Results
-| Model | Macro F1 |
-|-------|----------|
-| Base Mistral 7B (no fine-tuning) | TBD |
-| Fine-tuned on CUAD | TBD |
 
 ## Stack
 - **Model:** Mistral 7B Instruct v0.3

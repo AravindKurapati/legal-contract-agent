@@ -1,17 +1,9 @@
 """
-Modal web endpoint that serves the ContractReviewAgent.
-
-How it works:
-- Modal spins up an A10G container on first request (cold start ~15 seconds)
-- Model loads once and stays in memory for subsequent requests
-- Container idles for 5 minutes then shuts down (no cost while idle)
-- Each request runs the full contract review pipeline (~1-2 min per contract)
+Modal web endpoint serving ContractReviewAgent with base Mistral 7B.
 """
 
 import modal
-import json
 import sys
-import os
 
 app = modal.App("legal-contract-serve")
 
@@ -32,7 +24,10 @@ image = (
 
 volume = modal.Volume.from_name("cuad-sft-vol", create_if_missing=True)
 
-
+agent_mount = modal.Mount.from_local_dir(
+    "agent",
+    remote_path="/root/agent"
+)
 
 from pydantic import BaseModel
 
@@ -41,18 +36,16 @@ class ReviewRequest(BaseModel):
 
 class ReviewResponse(BaseModel):
     clauses: dict
-    risks: list[str]
+    risks: list
     summary: dict
 
 
-
 def load_model_and_tokenizer():
+    """Load base Mistral 7B — no fine-tuned adapter."""
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
-    from peft import PeftModel
 
     model_id = "mistralai/Mistral-7B-Instruct-v0.3"
-    adapter_path = "/vol/cuad-mistral-final"
 
     bnb_config = BitsAndBytesConfig(
         load_in_4bit=True,
@@ -65,57 +58,39 @@ def load_model_and_tokenizer():
     tokenizer.pad_token = tokenizer.eos_token
 
     print("Loading base model...")
-    base_model = AutoModelForCausalLM.from_pretrained(
+    model = AutoModelForCausalLM.from_pretrained(
         model_id,
         quantization_config=bnb_config,
         device_map="auto",
         torch_dtype=torch.bfloat16,
     )
-
-    print("Loading fine-tuned adapter...")
-    model = PeftModel.from_pretrained(base_model, adapter_path)
     model.eval()
-
     print("Model ready.")
     return model, tokenizer
 
-
-# ── Modal function ────────────────────────────────────────────────────────────
 
 @app.cls(
     gpu="A10G",
     image=image,
     volumes={"/vol": volume},
+    mounts=[agent_mount],
     secrets=[modal.Secret.from_name("huggingface-secret")],
-    container_idle_timeout=300,  # shut down after 5 min idle — no cost
-    timeout=600,                 # 10 min max per request
+    container_idle_timeout=300,
+    timeout=600,
 )
 class ContractReviewService:
-    """
-    Modal class-based deployment.
-    
-    Why @app.cls instead of @app.function:
-    @app.cls lets us load the model once in @modal.enter()
-    and reuse it across multiple requests.
-    With @app.function, the model would reload on every request.
-    """
 
     @modal.enter()
     def load(self):
-        """Called once when container starts. Loads model into memory."""
-        # Add agent directory to path so we can import from it
-        sys.path.append("/root/agent")
+        """Load model once on container startup."""
+        sys.path.insert(0, "/root/agent")
         self.model, self.tokenizer = load_model_and_tokenizer()
 
     @modal.web_endpoint(method="POST")
     def review(self, request: ReviewRequest) -> ReviewResponse:
-
-        # Import here because agent files are mounted at runtime
         from agent import ContractReviewAgent
-
         agent = ContractReviewAgent(self.model, self.tokenizer)
         result = agent.review_contract(request.contract_text)
-
         return ReviewResponse(
             clauses=result["clauses"],
             risks=result["risks"],
