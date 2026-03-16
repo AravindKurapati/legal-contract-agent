@@ -44,10 +44,17 @@ serve/app.py            - Streamlit UI
 - **Model size:** 52MB LoRA adapter on Mistral 7B base
 
 ## Evaluation Results
+
 | Model | Macro F1 |
 |-------|----------|
-| Base Mistral 7B (no fine-tuning) | TBD |
-| Fine-tuned on CUAD (ours) | TBD |
+| Base Mistral 7B Instruct (zero-shot) | 0.0725 |
+| Fine-tuned on CUAD — QLoRA, 512 ctx | 0.0430 |
+
+**Finding:** Context truncation (512 tokens) caused systematic degradation.
+Clauses appearing late in contracts were cut from training examples,
+causing the model to over-predict "not present." Base model deployed.
+
+**Next:** Retrain with 2048 context on A100. Expected F1 > 0.10.
 
 
 
@@ -68,8 +75,3 @@ modal deploy serve/serve.py
 streamlit run serve/app.py
 ```
 
-## What I'd do next
-- RLHF from lawyer feedback on extracted clauses
-- EDGAR augmentation (add raw SEC filings to training mix)
-- Jurisdiction-specific models (US vs EU contract law)
-- Integration with iManage/SharePoint for law firm workflows
