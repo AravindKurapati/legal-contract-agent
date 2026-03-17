@@ -26,15 +26,11 @@ image = (
         "sentencepiece",
         "rich",
     )
+    .add_local_dir("agent", remote_path="/root/agent")
 )
 
 volume = modal.Volume.from_name("cuad-sft-vol", create_if_missing=True)
 
-# Mount agent/ directory so Modal container can import it
-agent_mount = modal.Mount.from_local_dir(
-    "agent",
-    remote_path="/root/agent"
-)
 
 
 # ── Data ──────────────────────────────────────────────────────────────────────
@@ -145,8 +141,7 @@ def evaluate_model(model, tokenizer, examples, n_samples=500):
     gpu="A10G",
     image=image,
     volumes={"/vol": volume},
-    mounts=[agent_mount],
-    timeout=60 * 60 * 2,
+    timeout=60 * 60 * 3,
     secrets=[modal.Secret.from_name("huggingface-secret")],
 )
 def eval_baseline():
@@ -205,8 +200,7 @@ def eval_baseline():
     gpu="A10G",
     image=image,
     volumes={"/vol": volume},
-    mounts=[agent_mount],
-    timeout=60 * 60 * 2,
+    timeout=60 * 60 * 3,
     secrets=[modal.Secret.from_name("huggingface-secret")],
 )
 def eval_finetuned():

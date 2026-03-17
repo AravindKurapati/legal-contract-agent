@@ -38,18 +38,15 @@ serve/app.py            - Streamlit UI
 - **Duration:** 3h 45min on Modal A10G
 - **Model size:** 52MB LoRA adapter on Mistral 7B base
 
-## Evaluation Results
+## Results
 
-| Model | Macro F1 |
-|-------|----------|
-| Base Mistral 7B Instruct (zero-shot) | 0.0725 |
-| Fine-tuned on CUAD — QLoRA, 512 ctx | 0.0430 |
+| Model | Macro F1 | Eval method |
+|-------|----------|-------------|
+| Base Mistral 7B Instruct | **0.0752** | ContractReviewAgent |
+| Fine-tuned on CUAD (QLoRA, 512 ctx) | 0.0429 | ContractReviewAgent |
 
-**Finding:** Context truncation (512 tokens) caused systematic degradation.
-Clauses appearing late in contracts were cut from training examples,
-causing the model to over-predict "not present." Base model deployed.
-
-**Next:** Retrain with 2048 context on A100. Expected F1 > 0.10.
+**Deployed model:** Base Mistral 7B Instruct.
+**Finding:** Context truncation at 512 tokens caused systematic degradation.
 
 
 

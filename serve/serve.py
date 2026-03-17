@@ -20,14 +20,10 @@ image = (
         "fastapi",
         "pydantic",
     )
+    .add_local_dir("agent", remote_path="/root/agent")
 )
 
 volume = modal.Volume.from_name("cuad-sft-vol", create_if_missing=True)
-
-agent_mount = modal.Mount.from_local_dir(
-    "agent",
-    remote_path="/root/agent"
-)
 
 from pydantic import BaseModel
 
@@ -73,7 +69,6 @@ def load_model_and_tokenizer():
     gpu="A10G",
     image=image,
     volumes={"/vol": volume},
-    mounts=[agent_mount],
     secrets=[modal.Secret.from_name("huggingface-secret")],
     container_idle_timeout=300,
     timeout=600,
