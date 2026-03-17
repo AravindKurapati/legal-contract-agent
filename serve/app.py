@@ -13,7 +13,7 @@ import streamlit as st
 import requests
 import json
 
-MODAL_ENDPOINT = "YOUR_MODAL_ENDPOINT_URL"
+MODAL_ENDPOINT = "https://arvind-kurapati--legal-contract-serve-contractreviewserv-6eb889.modal.run"
 
 
 
