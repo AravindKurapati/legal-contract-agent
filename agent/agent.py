@@ -150,7 +150,8 @@ class ContractReviewAgent:
 
         print(f"Chunking contract ({len(contract_text)} chars)...")
         chunks = self.chunk_contract(contract_text)
-        print(f"Created {len(chunks)} chunks")
+        chunks = chunks[:25]
+        print(f"Using {len(chunks)} chunks")
 
         results = {}
         for i, clause_question in enumerate(CUAD_CLAUSE_TYPES):

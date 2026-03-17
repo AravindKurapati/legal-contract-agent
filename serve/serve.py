@@ -71,7 +71,7 @@ def load_model_and_tokenizer():
     volumes={"/vol": volume},
     secrets=[modal.Secret.from_name("huggingface-secret")],
     container_idle_timeout=300,
-    timeout=600,
+    timeout=3600,
 )
 class ContractReviewService:
 
@@ -84,7 +84,7 @@ class ContractReviewService:
     @modal.web_endpoint(method="POST")
     def review(self, request: ReviewRequest) -> ReviewResponse:
         from agent import ContractReviewAgent
-        agent = ContractReviewAgent(self.model, self.tokenizer)
+        agent = ContractReviewAgent(self.model,self.tokenizer,chunk_size=800,overlap=100)
         result = agent.review_contract(request.contract_text)
         return ReviewResponse(
             clauses=result["clauses"],

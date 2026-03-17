@@ -48,7 +48,11 @@ serve/app.py            - Streamlit UI
 **Deployed model:** Base Mistral 7B Instruct.
 **Finding:** Context truncation at 512 tokens caused systematic degradation.
 
+## Live Demo
+[Try it here](https://arvind-kurapati--legal-contract-serve-contractreviewserv-6eb889.modal.run)
 
+> Upload a contract PDF or TXT. The agent reviews it across 41 clause 
+> categories and flags legal risks. Cold start ~15 seconds on first request.
 
 
 ## Run it yourself
