@@ -1,7 +1,10 @@
 # Legal Contract Review Agent
 
 Fine tuned Mistral 7B on CUAD for automated legal contract review across 41 clause categories.
+Reviews contracts across 41 clause categories from the CUAD benchmark, 
+flags legal risks, and returns a structured report.
 
+**Status:** (in Active development) Retrain with 2048-token context in progress
 
 
 ## What it does
@@ -49,11 +52,24 @@ serve/app.py            - Streamlit UI
 **Finding:** Context truncation at 512 tokens caused systematic degradation.
 
 ## Live Demo
+
 [Try it here](https://arvind-kurapati--legal-contract-serve-contractreviewserv-6eb889.modal.run)
 
-> Upload a contract PDF or TXT. The agent reviews it across 41 clause 
-> categories and flags legal risks. Cold start ~15 seconds on first request.
+> Cold start ~15 seconds on first request. Upload a PDF or TXT contract.
 
+### Sample output (RGC Resources Franchise Agreement)
+- **41/41 clause types checked**
+- **4 risk flags detected**
+- Key clauses found: Governing Law (Commonwealth of Virginia), 
+  Renewal Term (20-year automatic renewal), Termination (30 days notice),
+  Indemnification present
+- Review time: ~8 minutes for 140k character contract
+
+### Known limitations
+- Base model sometimes generates plausible-sounding but incorrect clause text
+- Long contracts (>50k chars) take 5-10 minutes to review
+- Context limited to first ~10,000 tokens of contract
+- Fine-tuning with longer context (2048 tokens) would improve extraction accuracy
 
 ## Run it yourself
 ```bash
